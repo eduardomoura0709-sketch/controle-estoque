@@ -6,180 +6,81 @@
   <title>Sistema de Controle de Estoque</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
-      color: #222;
-    }
-    header {
-      background: #1a1a2e;
-      color: #fff;
-      padding: 18px 32px;
-      font-size: 1.3rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    nav {
-      display: flex;
-      gap: 8px;
-      background: #16213e;
-      padding: 10px 32px;
-    }
-    nav button {
-      background: transparent;
-      border: none;
-      color: #aaa;
-      font-size: 0.95rem;
-      cursor: pointer;
-      padding: 6px 16px;
-      border-radius: 4px;
-      transition: background 0.2s, color 0.2s;
-    }
-    nav button.active, nav button:hover {
-      background: #0f3460;
-      color: #fff;
-    }
-    .page { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #222; }
+    header { background: #1a1a2e; color: #fff; padding: 18px 32px; font-size: 1.3rem; font-weight: bold; letter-spacing: 1px; }
+    nav { display: flex; gap: 8px; background: #16213e; padding: 10px 32px; flex-wrap: wrap; }
+    nav button { background: transparent; border: none; color: #aaa; font-size: 0.95rem; cursor: pointer; padding: 6px 16px; border-radius: 4px; transition: background 0.2s, color 0.2s; }
+    nav button.active, nav button:hover { background: #0f3460; color: #fff; }
+    .page { display: none; padding: 32px; max-width: 1100px; margin: 0 auto; }
     .page.active { display: block; }
     h2 { margin-bottom: 20px; font-size: 1.2rem; color: #1a1a2e; }
+    h3 { margin: 20px 0 10px; color: #1a1a2e; }
     .form-group { margin-bottom: 14px; }
     label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: #444; }
-    input, select, textarea {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      background: #fff;
-      transition: border 0.2s;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #0f3460;
-    }
-    .error { border-color: #e74c3c !important; }
-    .error-msg { color: #e74c3c; font-size: 0.78rem; margin-top: 3px; display: none; }
-    .btn {
-      padding: 10px 24px;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
+    input, select, textarea { width: 100%; padding: 9px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; background: #fff; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #0f3460; }
+    .btn { padding: 10px 24px; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; font-weight: 600; }
     .btn-primary { background: #0f3460; color: #fff; }
     .btn-primary:hover { background: #1a1a2e; }
     .btn-danger { background: #e74c3c; color: #fff; font-size: 0.8rem; padding: 5px 12px; }
     .btn-danger:hover { background: #c0392b; }
-    .btn-sm { background: #0f3460; color: #fff; font-size: 0.8rem; padding: 5px 12px; }
-    .toast {
-      position: fixed; top: 20px; right: 20px;
-      padding: 12px 20px; border-radius: 8px;
-      font-size: 0.9rem; font-weight: 600;
-      color: #fff; z-index: 9999;
-      display: none; animation: fadeIn 0.3s;
-    }
+    .toast { position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; color: #fff; z-index: 9999; display: none; }
     .toast.success { background: #27ae60; }
     .toast.error { background: #e74c3c; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; } }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     th { background: #1a1a2e; color: #fff; padding: 10px 14px; font-size: 0.85rem; text-align: left; }
     td { padding: 10px 14px; font-size: 0.88rem; border-bottom: 1px solid #f0f0f0; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #f9f9f9; }
-    .card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .card { background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 20px; }
     .row { display: flex; gap: 16px; }
     .row .form-group { flex: 1; }
-    select[id="assoc-produto"] { margin-bottom: 10px; }
+    .resultado { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); white-space: pre-wrap; font-family: Consolas, monospace; }
   </style>
 </head>
 <body>
-
 <header>📦 Sistema de Controle de Estoque</header>
 <nav>
-  <button class="active" onclick="showPage('fornecedores')">Fornecedores</button>
-  <button onclick="showPage('produtos')">Produtos</button>
-  <button onclick="showPage('associacao')">Associação</button>
+  <button class="active" onclick="showPage(event, 'fornecedores')">Fornecedores</button>
+  <button onclick="showPage(event, 'produtos')">Produtos</button>
+  <button onclick="showPage(event, 'associacao')">Associação</button>
+  <button onclick="showPage(event, 'consultas')">Novas Funções</button>
 </nav>
-
 <div id="toast" class="toast"></div>
 
-<!-- FORNECEDORES -->
 <div id="page-fornecedores" class="page active">
   <div class="card">
     <h2>Cadastro de Fornecedor</h2>
     <div class="row">
-      <div class="form-group">
-        <label>Nome da Empresa *</label>
-        <input id="f-nome" placeholder="Insira o nome da empresa" />
-        <div class="error-msg" id="err-f-nome">Campo obrigatório</div>
-      </div>
-      <div class="form-group">
-        <label>CNPJ *</label>
-        <input id="f-cnpj" placeholder="00.000.000/0000-00" maxlength="18" oninput="maskCNPJ(this)" />
-        <div class="error-msg" id="err-f-cnpj">CNPJ inválido ou já cadastrado</div>
-      </div>
+      <div class="form-group"><label>Nome da Empresa</label><input id="f-nome" /></div>
+      <div class="form-group"><label>CNPJ</label><input id="f-cnpj" /></div>
     </div>
-    <div class="form-group">
-      <label>Endereço *</label>
-      <input id="f-end" placeholder="Insira o endereço completo" />
-      <div class="error-msg" id="err-f-end">Campo obrigatório</div>
-    </div>
+    <div class="form-group"><label>Endereço</label><input id="f-end" /></div>
     <div class="row">
-      <div class="form-group">
-        <label>Telefone *</label>
-        <input id="f-tel" placeholder="(00) 00000-0000" maxlength="15" oninput="maskTel(this)" />
-        <div class="error-msg" id="err-f-tel">Campo obrigatório</div>
-      </div>
-      <div class="form-group">
-        <label>E-mail *</label>
-        <input id="f-email" placeholder="exemplo@fornecedor.com" type="email" />
-        <div class="error-msg" id="err-f-email">E-mail inválido</div>
-      </div>
+      <div class="form-group"><label>Telefone</label><input id="f-tel" /></div>
+      <div class="form-group"><label>E-mail</label><input id="f-email" type="email" /></div>
     </div>
-    <div class="form-group">
-      <label>Contato Principal *</label>
-      <input id="f-contato" placeholder="Nome do contato principal" />
-      <div class="error-msg" id="err-f-contato">Campo obrigatório</div>
-    </div>
+    <div class="form-group"><label>Contato Principal</label><input id="f-contato" /></div>
     <button class="btn btn-primary" onclick="cadastrarFornecedor()">Cadastrar</button>
   </div>
-
-  <table id="tabela-fornecedores">
+  <table>
     <thead><tr><th>Nome</th><th>CNPJ</th><th>Telefone</th><th>E-mail</th><th>Contato</th><th>Ação</th></tr></thead>
     <tbody id="tbody-fornecedores"></tbody>
   </table>
 </div>
 
-<!-- PRODUTOS -->
 <div id="page-produtos" class="page">
   <div class="card">
     <h2>Cadastro de Produto</h2>
     <div class="row">
-      <div class="form-group">
-        <label>Nome do Produto *</label>
-        <input id="p-nome" placeholder="Insira o nome do produto" />
-        <div class="error-msg" id="err-p-nome">Campo obrigatório</div>
-      </div>
-      <div class="form-group">
-        <label>Código de Barras</label>
-        <input id="p-barras" placeholder="Insira o código de barras" type="number" />
-        <div class="error-msg" id="err-p-barras">Código já cadastrado</div>
-      </div>
+      <div class="form-group"><label>Nome do Produto</label><input id="p-nome" /></div>
+      <div class="form-group"><label>Código de Barras</label><input id="p-barras" /></div>
     </div>
-    <div class="form-group">
-      <label>Descrição *</label>
-      <textarea id="p-desc" rows="2" placeholder="Descreva brevemente o produto"></textarea>
-      <div class="error-msg" id="err-p-desc">Campo obrigatório</div>
-    </div>
+    <div class="form-group"><label>Descrição</label><textarea id="p-desc" rows="2"></textarea></div>
     <div class="row">
+      <div class="form-group"><label>Quantidade em Estoque</label><input id="p-qtd" type="number" min="0" /></div>
       <div class="form-group">
-        <label>Quantidade em Estoque</label>
-        <input id="p-qtd" type="number" placeholder="Quantidade disponível" min="0" />
-      </div>
-      <div class="form-group">
-        <label>Categoria *</label>
+        <label>Categoria</label>
         <select id="p-cat">
           <option value="">Selecione...</option>
           <option>Eletrônicos</option>
@@ -188,64 +89,64 @@
           <option>Limpeza</option>
           <option>Outro</option>
         </select>
-        <div class="error-msg" id="err-p-cat">Campo obrigatório</div>
       </div>
     </div>
-    <div class="row">
-      <div class="form-group">
-        <label>Data de Validade (se aplicável)</label>
-        <input id="p-validade" type="date" />
-      </div>
-    </div>
+    <div class="form-group"><label>Data de Validade</label><input id="p-validade" type="date" /></div>
     <button class="btn btn-primary" onclick="cadastrarProduto()">Cadastrar</button>
   </div>
-
-  <table id="tabela-produtos">
+  <table>
     <thead><tr><th>Nome</th><th>Cód. Barras</th><th>Categoria</th><th>Qtd</th><th>Validade</th><th>Ação</th></tr></thead>
     <tbody id="tbody-produtos"></tbody>
   </table>
 </div>
 
-<!-- ASSOCIAÇÃO -->
 <div id="page-associacao" class="page">
   <div class="card">
     <h2>Associação de Fornecedor a Produto</h2>
-    <div class="form-group">
-      <label>Produto</label>
-      <select id="assoc-produto" onchange="renderAssociacoes()"></select>
-    </div>
-    <div id="produto-detalhe" style="background:#f7f7f7;border-radius:6px;padding:12px;margin-bottom:14px;font-size:0.88rem;display:none;">
-      <strong id="det-nome"></strong><br/>
-      <span id="det-barras"></span><br/>
-      <span id="det-desc"></span>
-    </div>
-    <div class="form-group">
-      <label>Fornecedor</label>
-      <select id="assoc-fornecedor"></select>
-    </div>
+    <div class="form-group"><label>Produto</label><select id="assoc-produto"></select></div>
+    <div class="form-group"><label>Fornecedor</label><select id="assoc-fornecedor"></select></div>
     <button class="btn btn-primary" onclick="associar()">Associar Fornecedor</button>
   </div>
-
-  <table style="margin-top:20px;">
-    <thead><tr><th>Fornecedor</th><th>CNPJ</th><th>Ação</th></tr></thead>
+  <table>
+    <thead><tr><th>Produto</th><th>Fornecedor</th><th>CNPJ</th><th>Ação</th></tr></thead>
     <tbody id="tbody-associacao"></tbody>
   </table>
 </div>
 
+<div id="page-consultas" class="page">
+  <div class="card">
+    <h2>Novas Funções da Atividade</h2>
+    <h3>1) Buscar fornecedores por produto</h3>
+    <div class="row">
+      <div class="form-group"><label>ID do Produto</label><input id="consulta-produto-id" type="number" min="1" /></div>
+      <div class="form-group" style="display:flex;align-items:end;"><button class="btn btn-primary" onclick="buscarFornecedoresPorProduto()">Buscar</button></div>
+    </div>
+    <div id="resultado-fornecedores" class="resultado">Aguardando consulta...</div>
+  </div>
+
+  <div class="card">
+    <h3>2) Buscar produtos por categoria</h3>
+    <div class="row">
+      <div class="form-group">
+        <label>Categoria</label>
+        <select id="consulta-categoria">
+          <option value="Eletrônicos">Eletrônicos</option>
+          <option value="Alimentos">Alimentos</option>
+          <option value="Vestuário">Vestuário</option>
+          <option value="Limpeza">Limpeza</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="form-group" style="display:flex;align-items:end;"><button class="btn btn-primary" onclick="buscarProdutosPorCategoria()">Buscar</button></div>
+    </div>
+    <div id="resultado-categoria" class="resultado">Aguardando consulta...</div>
+  </div>
+</div>
+
 <script>
-  let fornecedores = [];
-  let produtos = [];
-  let associacoes = {}; // { produtoIndex: [fornecedorIndex, ...] }
+  const api = '/api';
 
-  function showPage(name) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    event.target.classList.add('active');
-    if (name === 'associacao') populateAssocSelects();
-  }
-
-  function toast(msg, type='success') {
+  function toast(msg, type = 'success') {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast ' + type;
@@ -253,171 +154,180 @@
     setTimeout(() => t.style.display = 'none', 3000);
   }
 
-  function clearErrors(ids) {
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) { el.classList.remove('error'); }
-      const err = document.getElementById('err-' + id);
-      if (err) err.style.display = 'none';
+  function showPage(event, name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'associacao') carregarSelects();
+  }
+
+  async function cadastrarFornecedor() {
+    const body = {
+      nome: document.getElementById('f-nome').value.trim(),
+      cnpj: document.getElementById('f-cnpj').value.trim(),
+      end: document.getElementById('f-end').value.trim(),
+      tel: document.getElementById('f-tel').value.trim(),
+      email: document.getElementById('f-email').value.trim(),
+      contato: document.getElementById('f-contato').value.trim()
+    };
+
+    const resp = await fetch(`${api}/fornecedores`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
     });
-  }
-
-  function showError(id, msg) {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('error');
-    const err = document.getElementById('err-' + id);
-    if (err) { err.textContent = msg || err.textContent; err.style.display = 'block'; }
-  }
-
-  function maskCNPJ(el) {
-    let v = el.value.replace(/\D/g,'').slice(0,14);
-    v = v.replace(/^(\d{2})(\d)/,'$1.$2');
-    v = v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');
-    v = v.replace(/\.(\d{3})(\d)/,'.$1/$2');
-    v = v.replace(/(\d{4})(\d)/,'$1-$2');
-    el.value = v;
-  }
-
-  function maskTel(el) {
-    let v = el.value.replace(/\D/g,'').slice(0,11);
-    if (v.length > 10) v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/,'($1) $2-$3');
-    else if (v.length > 6) v = v.replace(/^(\d{2})(\d{4})(\d*)/,'($1) $2-$3');
-    else if (v.length > 2) v = v.replace(/^(\d{2})(\d*)/,'($1) $2');
-    el.value = v;
-  }
-
-  function cadastrarFornecedor() {
-    const ids = ['f-nome','f-cnpj','f-end','f-tel','f-email','f-contato'];
-    clearErrors(ids);
-    let ok = true;
-    const nome = document.getElementById('f-nome').value.trim();
-    const cnpj = document.getElementById('f-cnpj').value.trim();
-    const end = document.getElementById('f-end').value.trim();
-    const tel = document.getElementById('f-tel').value.trim();
-    const email = document.getElementById('f-email').value.trim();
-    const contato = document.getElementById('f-contato').value.trim();
-
-    if (!nome) { showError('f-nome'); ok = false; }
-    if (cnpj.length < 18) { showError('f-cnpj', 'CNPJ inválido'); ok = false; }
-    else if (fornecedores.find(f => f.cnpj === cnpj)) { showError('f-cnpj', 'CNPJ já cadastrado!'); ok = false; }
-    if (!end) { showError('f-end'); ok = false; }
-    if (!tel) { showError('f-tel'); ok = false; }
-    if (!email || !email.includes('@')) { showError('f-email', 'E-mail inválido'); ok = false; }
-    if (!contato) { showError('f-contato'); ok = false; }
-
-    if (!ok) return;
-
-    fornecedores.push({ nome, cnpj, end, tel, email, contato });
-    ids.forEach(id => document.getElementById(id).value = '');
-    renderFornecedores();
+    const data = await resp.json();
+    if (!resp.ok) return toast(data.mensagem, 'error');
     toast('Fornecedor cadastrado com sucesso!');
+    document.querySelectorAll('#page-fornecedores input').forEach(i => i.value = '');
+    listarFornecedores();
+    carregarSelects();
   }
 
-  function renderFornecedores() {
-    const tbody = document.getElementById('tbody-fornecedores');
-    tbody.innerHTML = fornecedores.map((f,i) => `
+  async function listarFornecedores() {
+    const resp = await fetch(`${api}/fornecedores`);
+    const fornecedores = await resp.json();
+    document.getElementById('tbody-fornecedores').innerHTML = fornecedores.map(f => `
       <tr>
-        <td>${f.nome}</td><td>${f.cnpj}</td><td>${f.tel}</td>
-        <td>${f.email}</td><td>${f.contato}</td>
-        <td><button class="btn btn-danger" onclick="removerFornecedor(${i})">Remover</button></td>
-      </tr>`).join('');
+        <td>${f.nome}</td><td>${f.cnpj}</td><td>${f.tel}</td><td>${f.email}</td><td>${f.contato}</td>
+        <td><button class="btn btn-danger" onclick="removerFornecedor(${f.id})">Remover</button></td>
+      </tr>
+    `).join('');
   }
 
-  function removerFornecedor(i) {
-    fornecedores.splice(i, 1);
-    renderFornecedores();
-    toast('Fornecedor removido.', 'error');
+  async function removerFornecedor(id) {
+    const resp = await fetch(`${api}/fornecedores/${id}`, { method: 'DELETE' });
+    const data = await resp.json();
+    if (!resp.ok) return toast(data.mensagem, 'error');
+    toast(data.mensagem, 'error');
+    listarFornecedores();
+    listarAssociacoes();
+    carregarSelects();
   }
 
-  function cadastrarProduto() {
-    const ids = ['p-nome','p-barras','p-desc','p-cat'];
-    clearErrors(ids);
-    let ok = true;
-    const nome = document.getElementById('p-nome').value.trim();
-    const barras = document.getElementById('p-barras').value.trim();
-    const desc = document.getElementById('p-desc').value.trim();
-    const qtd = document.getElementById('p-qtd').value.trim();
-    const cat = document.getElementById('p-cat').value;
-    const validade = document.getElementById('p-validade').value;
+  async function cadastrarProduto() {
+    const body = {
+      nome: document.getElementById('p-nome').value.trim(),
+      barras: document.getElementById('p-barras').value.trim(),
+      desc: document.getElementById('p-desc').value.trim(),
+      qtd: document.getElementById('p-qtd').value.trim(),
+      cat: document.getElementById('p-cat').value,
+      validade: document.getElementById('p-validade').value
+    };
 
-    if (!nome) { showError('p-nome'); ok = false; }
-    if (barras && produtos.find(p => p.barras === barras)) { showError('p-barras', 'Código já cadastrado!'); ok = false; }
-    if (!desc) { showError('p-desc'); ok = false; }
-    if (!cat) { showError('p-cat'); ok = false; }
-
-    if (!ok) return;
-
-    produtos.push({ nome, barras, desc, qtd: qtd || 0, cat, validade });
-    ['p-nome','p-barras','p-desc','p-qtd','p-validade'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('p-cat').value = '';
-    renderProdutos();
+    const resp = await fetch(`${api}/produtos`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    const data = await resp.json();
+    if (!resp.ok) return toast(data.mensagem, 'error');
     toast('Produto cadastrado com sucesso!');
+    document.querySelectorAll('#page-produtos input, #page-produtos textarea').forEach(i => i.value = '');
+    document.getElementById('p-cat').value = '';
+    listarProdutos();
+    carregarSelects();
   }
 
-  function renderProdutos() {
-    const tbody = document.getElementById('tbody-produtos');
-    tbody.innerHTML = produtos.map((p,i) => `
+  async function listarProdutos() {
+    const resp = await fetch(`${api}/produtos`);
+    const produtos = await resp.json();
+    document.getElementById('tbody-produtos').innerHTML = produtos.map(p => `
       <tr>
-        <td>${p.nome}</td><td>${p.barras||'-'}</td><td>${p.cat}</td>
-        <td>${p.qtd}</td><td>${p.validade||'-'}</td>
-        <td><button class="btn btn-danger" onclick="removerProduto(${i})">Remover</button></td>
-      </tr>`).join('');
+        <td>${p.nome}</td><td>${p.barras || '-'}</td><td>${p.cat}</td><td>${p.qtd}</td><td>${p.validade || '-'}</td>
+        <td><button class="btn btn-danger" onclick="removerProduto(${p.id})">Remover</button></td>
+      </tr>
+    `).join('');
   }
 
-  function removerProduto(i) {
-    produtos.splice(i, 1);
-    renderProdutos();
-    toast('Produto removido.', 'error');
+  async function removerProduto(id) {
+    const resp = await fetch(`${api}/produtos/${id}`, { method: 'DELETE' });
+    const data = await resp.json();
+    if (!resp.ok) return toast(data.mensagem, 'error');
+    toast(data.mensagem, 'error');
+    listarProdutos();
+    listarAssociacoes();
+    carregarSelects();
   }
 
-  function populateAssocSelects() {
-    const selP = document.getElementById('assoc-produto');
-    const selF = document.getElementById('assoc-fornecedor');
-    selP.innerHTML = produtos.length
-      ? produtos.map((p,i) => `<option value="${i}">${p.nome}</option>`).join('')
+  async function carregarSelects() {
+    const [respProdutos, respFornecedores] = await Promise.all([
+      fetch(`${api}/produtos`),
+      fetch(`${api}/fornecedores`)
+    ]);
+    const produtos = await respProdutos.json();
+    const fornecedores = await respFornecedores.json();
+
+    document.getElementById('assoc-produto').innerHTML = produtos.length
+      ? produtos.map(p => `<option value="${p.id}">${p.id} - ${p.nome}</option>`).join('')
       : '<option value="">Nenhum produto cadastrado</option>';
-    selF.innerHTML = fornecedores.length
-      ? fornecedores.map((f,i) => `<option value="${i}">${f.nome}</option>`).join('')
+
+    document.getElementById('assoc-fornecedor').innerHTML = fornecedores.length
+      ? fornecedores.map(f => `<option value="${f.id}">${f.id} - ${f.nome}</option>`).join('')
       : '<option value="">Nenhum fornecedor cadastrado</option>';
-    renderAssociacoes();
   }
 
-  function renderAssociacoes() {
-    const idx = document.getElementById('assoc-produto').value;
-    const det = document.getElementById('produto-detalhe');
-    if (idx === '' || !produtos[idx]) { det.style.display='none'; document.getElementById('tbody-associacao').innerHTML=''; return; }
-    const p = produtos[idx];
-    det.style.display = 'block';
-    document.getElementById('det-nome').textContent = p.nome;
-    document.getElementById('det-barras').textContent = 'Cód. Barras: ' + (p.barras||'-');
-    document.getElementById('det-desc').textContent = p.desc;
+  async function associar() {
+    const body = {
+      produtoId: Number(document.getElementById('assoc-produto').value),
+      fornecedorId: Number(document.getElementById('assoc-fornecedor').value)
+    };
 
-    const assocs = associacoes[idx] || [];
-    const tbody = document.getElementById('tbody-associacao');
-    tbody.innerHTML = assocs.map(fi => `
-      <tr>
-        <td>${fornecedores[fi]?.nome||'?'}</td>
-        <td>${fornecedores[fi]?.cnpj||'?'}</td>
-        <td><button class="btn btn-danger" onclick="desassociar(${idx},${fi})">Desassociar</button></td>
-      </tr>`).join('') || '<tr><td colspan="3" style="color:#aaa;text-align:center">Nenhum fornecedor associado</td></tr>';
+    const resp = await fetch(`${api}/associacoes`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    const data = await resp.json();
+    if (!resp.ok) return toast(data.mensagem, 'error');
+    toast(data.mensagem);
+    listarAssociacoes();
   }
 
-  function associar() {
-    const pi = document.getElementById('assoc-produto').value;
-    const fi = document.getElementById('assoc-fornecedor').value;
-    if (pi===''||fi==='') return toast('Selecione produto e fornecedor.','error');
-    if (!associacoes[pi]) associacoes[pi] = [];
-    if (associacoes[pi].includes(Number(fi))) return toast('Fornecedor já está associado a este produto!','error');
-    associacoes[pi].push(Number(fi));
-    renderAssociacoes();
-    toast('Fornecedor associado com sucesso ao produto!');
+  async function listarAssociacoes() {
+    const resp = await fetch(`${api}/associacoes`);
+    const dados = await resp.json();
+    const linhas = [];
+
+    dados.forEach(item => {
+      item.fornecedores.forEach(f => {
+        linhas.push(`
+          <tr>
+            <td>${item.produtoNome}</td>
+            <td>${f.nome}</td>
+            <td>${f.cnpj}</td>
+            <td><button class="btn btn-danger" onclick="desassociar(${item.produtoId}, ${f.id})">Desassociar</button></td>
+          </tr>
+        `);
+      });
+    });
+
+    document.getElementById('tbody-associacao').innerHTML = linhas.join('') || '<tr><td colspan="4">Nenhuma associação cadastrada</td></tr>';
   }
 
-  function desassociar(pi, fi) {
-    associacoes[pi] = associacoes[pi].filter(x => x !== fi);
-    renderAssociacoes();
-    toast('Fornecedor desassociado com sucesso!', 'error');
+  async function desassociar(produtoId, fornecedorId) {
+    const resp = await fetch(`${api}/associacoes?produtoId=${produtoId}&fornecedorId=${fornecedorId}`, { method: 'DELETE' });
+    const data = await resp.json();
+    if (!resp.ok) return toast(data.mensagem, 'error');
+    toast(data.mensagem, 'error');
+    listarAssociacoes();
   }
+
+  async function buscarFornecedoresPorProduto() {
+    const id = document.getElementById('consulta-produto-id').value;
+    if (!id) return toast('Informe o ID do produto.', 'error');
+    const resp = await fetch(`${api}/produtos/${id}/fornecedores`);
+    const data = await resp.json();
+    if (!resp.ok) return document.getElementById('resultado-fornecedores').textContent = data.mensagem;
+    document.getElementById('resultado-fornecedores').textContent = JSON.stringify(data, null, 2);
+  }
+
+  async function buscarProdutosPorCategoria() {
+    const categoria = document.getElementById('consulta-categoria').value;
+    const resp = await fetch(`${api}/produtos/categoria/${encodeURIComponent(categoria)}`);
+    const data = await resp.json();
+    document.getElementById('resultado-categoria').textContent = JSON.stringify(data, null, 2);
+  }
+
+  listarFornecedores();
+  listarProdutos();
+  listarAssociacoes();
+  carregarSelects();
 </script>
 </body>
 </html>
